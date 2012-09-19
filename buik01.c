@@ -19,11 +19,11 @@
 #define VALVE_BREAK  PB4 // Обрыв клапана
 
 // Сокращенные написания временных задержек
-#define wait250()  do { _delay_ms(250); } while(0)
-#define wait350()  do { _delay_ms(350); } while(0)
-#define wait500()  do { _delay_ms(500); } while(0)
-#define wait650()  do { _delay_ms(650); } while(0)
-#define waitasec() do { _delay_ms(1000); } while(0)
+#define wait40()   do { _delay_loop_2(5200); } while(0)
+#define wait350()  do { _delay_loop_2(45850); } while(0)
+#define wait500()  do { _delay_loop_2(65500); _delay_loop_2(65500); } while(0)
+#define wait650()  do { _delay_loop_2(65500); _delay_loop_2(19650); } while(0)
+#define veryfast() do { _delay_loop_2(1000); } while(0)
 
 void ioinit(void)
 {
@@ -65,7 +65,6 @@ int main(void)
 
     for(;;)
     { 	// Основной цикл
-         
         while(!(PINB & (1 << VALVE_BREAK))) // !(PINB & (1 << VALVE_BREAK))
         {
             /** 
@@ -74,7 +73,7 @@ int main(void)
              * Сообщаем тем самым об обрыве клапана
              */
             switch_led();
-            waitasec();
+            veryfast();
         } // while - обрыв клапана
         
         if (PINB & (1 << VALVE_ONOFF)) // PINB & (1 << VALVE_ONOFF)
@@ -107,10 +106,11 @@ int main(void)
             
             // Счетчик ложного сигнала на закрытие клапана.
             // Немного подождем, вдруг ложная тревога.
-            // Ждем целую секунду (два раза по 500 мс)
-            if (fake_close++ <= 2)
+            // Ждем сорок милисекунд
+            
+            if (fake_close++ <= 1)
             {
-                wait500();
+                wait40();
                 continue;
             }
             
