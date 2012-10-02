@@ -36,7 +36,10 @@ void ioinit(void)
      * PB4 (pin 3) на вход  (0) Обрыв клапана
      */
 
-    DDRB = ((1 << LED_PIN)|(1 << VALVE_CLOSE));	
+    DDRB = ((1 << LED_PIN)|(1 << VALVE_CLOSE));
+    //DDRB = (1 << LED_PIN);
+    PORTB |= (1 << VALVE_CLOSE);  // Единица на порт
+    
    
     // Отключаем аналоговый компаратор
     ADCSRB |= (1 << ACD);
@@ -123,9 +126,9 @@ int main(void)
                  * подаем импульс длиной 0.35 секунды
                  */
                 
-                PORTB |= (1 << VALVE_CLOSE);   // Сигнал на закрытие клапана
+                PORTB &= ~(1 << VALVE_CLOSE); // Ноль на порт
                 wait350();
-                PORTB &= ~(1 << VALVE_CLOSE);  // Отключаем сигнал
+                PORTB |= (1 << VALVE_CLOSE);  // Единица на порт
                 wait650();
             }
         }
